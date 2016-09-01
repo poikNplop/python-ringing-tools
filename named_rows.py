@@ -5,7 +5,7 @@
 class Bellrow(tuple):
     def __init__(self, inobj):
         self._inobj = inobj
-        self._letters = "0ETABCDFGHIJKLMNOPQRSUVWXYZ!\"£$%^&*()-=_+[]{};:~,.<>"
+        self._letters = '0ETABCDFGHIJKLMNOPQRSUVWXYZ!"£$%^&*()-=_+[]{};:~,.<>'
         self = tuple(inobj)
 
     def __str__(self):
