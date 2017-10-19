@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 class Bellrow(tuple):
-    def __init__(self, inobj, chars='0ETABCDFGHIJKLMNOPQRSUVWXYZ!"£$%^&*()-=_+[]{};:~,.<>'):
+    def __init__(self, inobj, chars='1234567890ETABCDFGHIJKLMNOPQRSUVWXYZ'):
         self._inobj = inobj
         self._letters = chars
         self = tuple(inobj)
@@ -12,16 +12,10 @@ class Bellrow(tuple):
         letters = self._letters
         for x in range(0, len( inobj ) ):
             c_obj = inobj[x]
-            try:
-                cobj = int(c_obj)
-                success = True
-            except ValueError:
-                success = False
-            if success and cobj > 9:
-                if cobj < len(letters) + 10:
-                    c_obj = letters[cobj-10]
-                else:
-                    c_obj = '#'
+            if cobj < len(letters):
+                c_obj = letters[cobj]
+            else:
+                c_obj = '#'
             istr += str(c_obj)
         return(istr)
 
@@ -33,9 +27,28 @@ class Rowchange:
     def swap(self, inrow):
         row = str(inrow)
         rowl = len(row)
+        outrow = ""
+        chars = self._chars
 
-        if self._pn:
-            if rowl % 2:
-                raise IndexError("Odd number of bells can't swap all bells")
+        for char in chars[1]:
+            if char in self._pn:
+                if rowl % 2:
+                    raise IndexError("Odd number of bells can't swap all bells")
 
-        pass # not implemented
+        swapping = False
+        for n in range(0, rowl):
+            bell = chars[0][n]
+            if bell in self._pn:
+                if swapping:
+                    raise IndexError("Odd number of bells between two non-swapping bells")
+                outrow += bell
+            else:
+                if swapping:
+                    outrow += chars[0][n] + chars[0][n-1]
+                else:
+                    swapping = True
+
+        if swapping:
+            raise IndexError("Odd number of bells after non-swapping bell")
+
+        return(Bellrow(outrow))
